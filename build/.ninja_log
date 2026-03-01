@@ -1,7 +1,4 @@
 # ninja log v7
 3	348	7940931039948585	CMakeFiles/ZagMate.dir/src/zagmate.c.obj	5cc78255f1deeddd
-350	672	7940931043416228	ZagMate.exe	b3a798694385829f
-7	318	7940962189902372	CMakeFiles/zagmate.dir/src/zagmate.c.obj	1e46cc890ced3ce8
-319	613	7940962193024876	zagmate.exe	9c296ad84552bfcf
-6	381	7940967232160079	CMakeFiles/zagmate.dir/src/zagmate.c.obj	1e46cc890ced3ce8
-381	648	7940967235915163	zagmate.exe	9c296ad84552bfcf
+8	287	7941032820866279	CMakeFiles/zagmate.dir/src/zagmate.c.obj	1e46cc890ced3ce8
+288	573	7941032823682916	zagmate.exe	9c296ad84552bfcf

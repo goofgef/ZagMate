@@ -32,6 +32,7 @@ typedef struct VM {
     vtable* vtable;
 
     size_t program_size;
+    size_t pc;
 
     Handler handlers[256];
     Instruction* bytecode;

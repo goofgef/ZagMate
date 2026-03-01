@@ -19,7 +19,7 @@ int write_vm(VM *vm, Instruction* bytecode, size_t len) {
     return 0;
 }
 
-int run_vm(VM *vm) {
+int run_vm_cycle(VM *vm) {
     if (!vm){
         printf("VM not initialized!\n");
         return 1;
@@ -29,19 +29,26 @@ int run_vm(VM *vm) {
         return 1;
     }
 
-    // Loop through each instruction in bytecode
-    for (size_t i = 0; i < vm->program_size; i++) {
-        Instruction current_instruction = vm->bytecode[i];
-        Handler handler = vm->handlers[current_instruction.opcode];
-        if (!handler){
-            printf("Unknown opcode %u\n", current_instruction.opcode);
-            return 1;
-        }
-        handler(vm, &current_instruction);
+    Instruction current_instruction = vm->bytecode[vm->pc];
+    Handler handler = vm->handlers[current_instruction.opcode];
+    if (!handler){
+        printf("Unknown opcode %u\n", current_instruction.opcode);
+        return 1;
     }
+    handler(vm, &current_instruction);
+    vm->pc++;
     return 0;
 }
 
+int run_vm(VM *vm) {
+    if (!vm){
+        printf("VM not initialized!\n");
+        return 1;
+    }
+    for (size_t i = 0; i < vm->program_size; i++) {
+        run_vm_cycle(vm);
+    }
+}
 int register_handler_vm(VM* vm, uint8_t opcode, Handler handler) {
     if (!handler){
         printf("Handler not found!\n");
@@ -129,29 +136,25 @@ int main() {
     VM vm = {};
     init_vm(&vm);
 
-    Instruction* bytecode = malloc(sizeof(Instruction));
+    vm.vtable->register_handler(&vm, 0, &add);
 
-    bytecode->operand_count = 4;
-    bytecode->operands = malloc(sizeof(uint32_t) * bytecode->operand_count);
+    Instruction instr = {0};
+    instr.opcode = 0;
+    instr.operand_count = 3;
+    instr.operands = malloc(3 * sizeof(uint32_t));
+    instr.operands[0] = 0; // dest
+    instr.operands[1] = 1; // src1
+    instr.operands[2] = 2; // src2
 
-    int ret_reg_handler = vm.vtable->register_handler(&vm, 0, &add);
+    vm.regs[1].data.value = 7;
+    vm.regs[2].data.value = 11;
 
-    bytecode->opcode = 0;
-    bytecode->operands[0] = 0;
-    bytecode->operands[1] = 1;
-    bytecode->operands[2] = 2;
-    bytecode->operands[3] = 0;
+    vm.vtable->write(&vm, &instr, 1);
+    vm.vtable->run(&vm);
 
-    vm.regs[1].data.value = 1;
-    vm.regs[2].data.value = 1;
-
-    int ret_write = vm.vtable->write(&vm, bytecode, 1);
-    int ret_run = vm.vtable->run(&vm);
-
-    printf("reg0: %" PRId32 "\n", vm.regs[0].data.value);
+    printf("Result in r0: %d\n", vm.regs[0].data.value); //18
 
     vm.vtable->clean(&vm);
     free(vm.vtable);
-
     return 0;
 }
