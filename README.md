@@ -46,17 +46,55 @@ printf("Result in r0: %d\n", vm.regs[0].data.value); //18
 vm.vtable->clean(&vm);
 free(vm.vtable);
 ```
-### Getting Started
-You will need CMake and GCC.
-We have tested on Windows and Linux so far.
+### Building
+To build ZagMate, you will need GCC, Make, and CMake
 
-```Bash
-git clone https://github.com/goofgef/ZagMate.git
-cd ZagMate
-cmake -B build
-cmake --build build
+### Executable
+
+Windows:
+
+```bash
+cd util
+compile
 ```
-Or on Windows with the included batch file:
-```Bash
-compile.bat
+
+Linux:
+```bash
+cd util
+chmod +x compile.sh
+./compile.sh
+```
+
+### Dynamic Library
+
+Windows:
+
+```bash
+cd util
+dlib
+```
+
+Linux:
+
+```bash
+cd util
+chmod +x dlib.sh
+./dlib.sh
+```
+
+### Static Library
+
+Windows:
+
+```bash
+cd util
+slib
+```
+
+Linux:
+
+```bash
+cd util
+chmod +x slib.sh
+./slib.sh
 ```
