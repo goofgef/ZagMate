@@ -3,7 +3,6 @@ CFLAGS = -Iheaders -Wall -Wextra -std=c11
 
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
-
 TARGET = zagmate.exe
 
 all: $(TARGET)
@@ -15,4 +14,5 @@ $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	del /Q $(OBJ) $(TARGET)
+	del /Q src\*.o
+	if exist $(TARGET) del /Q $(TARGET)
