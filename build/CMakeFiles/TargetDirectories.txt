@@ -1,0 +1,3 @@
+C:/ZagMate/build/CMakeFiles/zagmate.dir
+C:/ZagMate/build/CMakeFiles/edit_cache.dir
+C:/ZagMate/build/CMakeFiles/rebuild_cache.dir
