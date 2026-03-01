@@ -10,19 +10,19 @@ typedef int (*Handler)(struct VM*, struct Instruction*);
 typedef struct {
     uint32_t address;
     union {
-        uint32_t value;
-        uint8_t bytes[4];
+        int32_t value;
+        int8_t bytes[4];
     } data;
 } Register;
 
 typedef struct Instruction {
     uint8_t opcode;
-    uint32_t operands[4];
+    uint32_t* operands;
     uint8_t operand_count;
 } Instruction;
 
 typedef struct {
-    int (*write)(struct VM*, Instruction*);
+    int (*write)(struct VM*, Instruction*, size_t);
     int (*run)(struct VM*);
     int (*clean)(struct VM*);
     int (*register_handler)(struct VM*, uint8_t, Handler);
