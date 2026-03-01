@@ -1,16 +1,18 @@
 CC = gcc
-CFLAGS = -Iheaders
-SRC = src/zagmate.c
+CFLAGS = -Iheaders -Wall -Wextra -std=c11
+
+SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
+
 TARGET = zagmate.exe
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-    $(CC) $(OBJ) -o $@
+	$(CC) $(OBJ) -o $@
 
 %.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-    del /Q *.o main.exe
+	del /Q $(OBJ) $(TARGET)
