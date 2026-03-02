@@ -53,10 +53,13 @@ typedef struct VM {
 
     size_t program_size;
     size_t pc;
+    size_t sp;
 
     Handler handlers[256];
     Instruction* bytecode;
     Register regs[16];
+
+    int64_t stack[256];
 } VM;
 
 int init_vm(VM *vm);
