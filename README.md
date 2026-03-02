@@ -16,7 +16,7 @@ ZagMate is all about being dynamic and flexible.
 ### Features
 - Pure C, no major dependencies
 - Register-based execution model
-- Dynamic opcode handlers via function pointer vtable
+- Dynamic opcode handlers via function pointers in a handler table
 - Variable-length instructions (operand_count + uint32_t* operands)
 
 ### Quick Example (main.c)
