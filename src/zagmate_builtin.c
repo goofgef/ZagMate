@@ -4,16 +4,16 @@
 
 int add(VM* vm, Instruction* instruction){
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return 1;
     }
     if (!instruction){
-        printf("Instruction is empty!\n");
+        fprintf(stderr,"Instruction is empty!\n");
         return 1;
     }
 
     if (instruction->operand_count < 3) {
-        printf("Not enough operands!\n");
+        fprintf(stderr,"Not enough operands!\n");
         return 1;
     }
 
@@ -22,7 +22,7 @@ int add(VM* vm, Instruction* instruction){
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
-        printf("Not enough registers!\n");
+        fprintf(stderr,"Not enough registers!\n");
         return 1;
     }
 
@@ -32,16 +32,16 @@ int add(VM* vm, Instruction* instruction){
 
 int sub(VM* vm, Instruction* instruction){
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return 1;
     }
     if (!instruction){
-        printf("Instruction is empty!\n");
+        fprintf(stderr,"Instruction is empty!\n");
         return 1;
     }
 
     if (instruction->operand_count < 3) {
-        printf("Not enough operands!\n");
+        fprintf(stderr,"Not enough operands!\n");
         return 1;
     }
 
@@ -50,7 +50,7 @@ int sub(VM* vm, Instruction* instruction){
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
-        printf("Not enough registers!\n");
+        fprintf(stderr,"Not enough registers!\n");
         return 1;
     }
 
@@ -60,16 +60,16 @@ int sub(VM* vm, Instruction* instruction){
 
 int multiply(VM* vm, Instruction* instruction){
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return 1;
     }
     if (!instruction){
-        printf("Instruction is empty!\n");
+        fprintf(stderr,"Instruction is empty!\n");
         return 1;
     }
 
     if (instruction->operand_count < 3) {
-        printf("Not enough operands!\n");
+        fprintf(stderr,"Not enough operands!\n");
         return 1;
     }
 
@@ -78,7 +78,7 @@ int multiply(VM* vm, Instruction* instruction){
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
-        printf("Not enough registers!\n");
+        fprintf(stderr,"Not enough registers!\n");
         return 1;
     }
 
@@ -88,16 +88,16 @@ int multiply(VM* vm, Instruction* instruction){
 
 int divide(VM* vm, Instruction* instruction){
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return 1;
     }
     if (!instruction){
-        printf("Instruction is empty!\n");
+        fprintf(stderr,"Instruction is empty!\n");
         return 1;
     }
 
     if (instruction->operand_count < 3) {
-        printf("Not enough operands!\n");
+        fprintf(stderr,"Not enough operands!\n");
         return 1;
     }
 
@@ -106,12 +106,12 @@ int divide(VM* vm, Instruction* instruction){
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
-        printf("Not enough registers!\n");
+        fprintf(stderr,"Not enough registers!\n");
         return 1;
     }
 
     if (!reg2->data.value){
-        printf("Tried to divide by zero!\n");
+        fprintf(stderr,"Tried to divide by zero!\n");
         return 1;
     }
     int64_t result = reg1->data.value / reg2->data.value;
@@ -121,16 +121,16 @@ int divide(VM* vm, Instruction* instruction){
 
 int mod(VM* vm, Instruction* instruction){
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return 1;
     }
     if (!instruction){
-        printf("Instruction is empty!\n");
+        fprintf(stderr,"Instruction is empty!\n");
         return 1;
     }
 
     if (instruction->operand_count < 3) {
-        printf("Not enough operands!\n");
+        fprintf(stderr,"Not enough operands!\n");
         return 1;
     }
 
@@ -139,12 +139,12 @@ int mod(VM* vm, Instruction* instruction){
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
-        printf("Not enough registers!\n");
+        fprintf(stderr,"Not enough registers!\n");
         return 1;
     }
 
     if (!reg2->data.value){
-        printf("Tried to mod by zero!\n");
+        fprintf(stderr,"Tried to mod by zero!\n");
         return 1;
     }
     int64_t result = reg1->data.value % reg2->data.value;
