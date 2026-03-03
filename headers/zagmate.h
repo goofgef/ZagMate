@@ -38,7 +38,7 @@ typedef struct Instruction Instruction;
 typedef int (*Handler)(struct VM*, struct Instruction*);
 
 typedef struct {
-    uint32_t address;
+    size_t address;
     enum RegisterType type;
 
     union {
@@ -81,5 +81,5 @@ typedef struct VM {
 } VM;
 
 ZAGMATE_API ReturnStatus init_vm(VM *vm);
-ZAGMATE_API Register* find_register(Register* regs, uint32_t addr, size_t count);
+ZAGMATE_API Register* find_register(Register* regs, int64_t addr, size_t count);
 #endif //ZAGMATE_ZAGMATE_H
