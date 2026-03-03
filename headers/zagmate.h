@@ -56,6 +56,7 @@ typedef struct VM {
     size_t program_size;
     size_t pc;
     size_t sp;
+    size_t capacity;
 
     Handler handlers[256];
     Instruction* bytecode;

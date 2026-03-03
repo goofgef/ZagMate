@@ -26,6 +26,10 @@ int append_vm(VM *vm, Instruction instruction) {
         return 1;
     }
 
+    if (!vm->bytecode || vm->program_size >= vm->capacity){
+        printf("Cannot append to bytecode, bytecode is full!\n");
+        return 1;
+    }
     vm->bytecode[vm->program_size] = instruction;
 
     vm->program_size++;
@@ -66,6 +70,7 @@ int run_vm(VM *vm) {
         }
         run_vm_cycle(vm);
     }
+    return 0;
 }
 
 Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
@@ -132,6 +137,7 @@ int init_vm(VM *vm) {
     vm->bytecode = NULL;
     vm->vtable = malloc(sizeof(vtable));
     init_vtable(vm->vtable);
+    vm->capacity = 0;
 
     vm->pc = 0;
 
