@@ -82,7 +82,8 @@ Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
 
     if (!instruction.operands){
         fprintf(stderr,"Memory allocation error!\n");
-        return instruction;
+        instruction.operand_count = 0;
+        return *NULL_INSTRUCTION_STRUCT;
     }
 
     for (size_t i = 0; i < operand_count; i++){
@@ -165,6 +166,12 @@ ReturnStatus init_vm(VM *vm, size_t capacity) {
     vm->program_size = 0;
     vm->bytecode = NULL;
     vm->vtable = malloc(sizeof(vtable));
+
+    if (!vm->vtable){
+        fprintf(stderr,"Memory allocation error!\n");
+        return NULL_VTABLE;
+    }
+
     init_vtable(vm->vtable);
     vm->capacity = capacity;
 

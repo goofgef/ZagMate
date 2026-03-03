@@ -14,6 +14,7 @@
 #include <stddef.h>
 
 #define NULL_REGISTER ((Register*) NULL)
+#define NULL_INSTRUCTION_STRUCT ((Instruction*) NULL)
 
 typedef enum{
     OK = 0,
@@ -24,6 +25,7 @@ typedef enum{
     NULL_INSTRUCTION,
     NULL_UNKNOWN_OPCODE,
     FULL_BYTECODE,
+    NULL_VTABLE,
     GENERAL_NULL
 }ReturnStatus;
 
