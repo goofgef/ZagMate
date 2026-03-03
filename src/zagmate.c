@@ -6,11 +6,11 @@
 
 ReturnStatus write_vm(VM *vm, Instruction* bytecode, size_t len) {
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
     if (!bytecode){
-        printf("Bytecode is empty!\n");
+        fprintf(stderr,"Bytecode is empty!\n");
         return NULL_BYTECODE;
     }
 
@@ -22,16 +22,16 @@ ReturnStatus write_vm(VM *vm, Instruction* bytecode, size_t len) {
 
 ReturnStatus append_vm(VM *vm, Instruction instruction) {
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
 
     if (!vm->bytecode){
-        printf("Cannot append to bytecode, bytecode is NULL!\n");
+        fprintf(stderr,"Cannot append to bytecode, bytecode is NULL!\n");
         return NULL_BYTECODE;
     }
     if (vm->program_size >= vm->capacity){
-        printf("Cannot append to bytecode, bytecode is full!\n");
+        fprintf(stderr,"Cannot append to bytecode, bytecode is full!\n");
         return FULL_BYTECODE;
     }
     vm->bytecode[vm->program_size] = instruction;
@@ -43,18 +43,18 @@ ReturnStatus append_vm(VM *vm, Instruction instruction) {
 
 ReturnStatus run_vm_cycle(VM *vm) {
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
     if (!vm->bytecode){
-        printf("Bytecode is empty!\n");
+        fprintf(stderr,"Bytecode is empty!\n");
         return NULL_BYTECODE;
     }
 
     Instruction current_instruction = vm->bytecode[vm->pc];
     Handler handler = vm->handlers[current_instruction.opcode];
     if (!handler){
-        printf("Unknown opcode %u\n", current_instruction.opcode);
+        fprintf(stderr,"Unknown opcode %u\n", current_instruction.opcode);
         return GENERAL_NULL;
     }
 
@@ -65,7 +65,7 @@ ReturnStatus run_vm_cycle(VM *vm) {
 
 ReturnStatus run_vm(VM *vm) {
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
     while (vm->pc < vm->program_size && !vm->halted) {
@@ -81,7 +81,7 @@ Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
     instruction.operands = malloc(operand_count * sizeof(int64_t));
 
     if (!instruction.operands){
-        printf("Memory allocation error!\n");
+        fprintf(stderr,"Memory allocation error!\n");
         return instruction;
     }
 
@@ -94,11 +94,11 @@ Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
 
 ReturnStatus register_handler_vm(VM* vm, uint8_t opcode, Handler handler) {
     if (!handler){
-        printf("Handler not found!\n");
+        fprintf(stderr,"Handler not found!\n");
         return GENERAL_NULL;
     }
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
     vm->handlers[opcode] = handler;
@@ -107,7 +107,7 @@ ReturnStatus register_handler_vm(VM* vm, uint8_t opcode, Handler handler) {
 
 ReturnStatus clean_vm(VM *vm) {
     if (!vm){
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
 
@@ -129,7 +129,7 @@ ReturnStatus clean_vm(VM *vm) {
 
 ReturnStatus reset_vm(VM* vm, size_t capacity) {
     if (!vm) {
-        printf("VM not initialized!\n");
+        fprintf(stderr,"VM not initialized!\n");
         return NULL_VM;
     }
 
@@ -144,7 +144,6 @@ ReturnStatus reset_vm(VM* vm, size_t capacity) {
     vm->halted = 0;
     vm->sp = 0;
     vm->capacity = capacity;
-
     for (size_t i = 0; i < 32; i++) {
         vm->regs[i].data.value = 0;
     }
@@ -180,11 +179,11 @@ ReturnStatus init_vm(VM *vm, size_t capacity) {
 
 Register* find_register(Register* regs, int64_t addr, size_t count){
     if (!regs){
-        printf("Registers not found!\n");
+        fprintf(stderr,"Registers not found!\n");
         return NULL_REGISTER;
     }
     if (addr < 0 || (size_t)addr >= count){
-        printf("Address out of bounds!\n");
+        fprintf(stderr,"Address out of bounds!\n");
         return NULL_REGISTER;
     }
     return &regs[(size_t)addr];
