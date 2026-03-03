@@ -14,7 +14,7 @@ int main() {
     vm.vtable->register_handler(&vm, 1, &sub);
 
     Instruction* bytecode = malloc(2 * sizeof(Instruction));
-    vm->capacity = 2;
+    vm.capacity = 2;
 
     int64_t ops0[] = {0, 1, 2};
     int64_t ops1[] = {1, 1, 2};
