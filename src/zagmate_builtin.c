@@ -21,7 +21,7 @@ int add(VM* vm, Instruction* instruction){
     Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
 
-    if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
+    if (*reg0 == NULL_REGISTER || *reg1 == NULL_REGISTER || *reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
         return 1;
     }
@@ -49,7 +49,7 @@ int sub(VM* vm, Instruction* instruction){
     Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
     Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
 
-    if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
+    if (*reg0 == NULL_REGISTER || *reg1 == NULL_REGISTER || *reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
         return 1;
     }
