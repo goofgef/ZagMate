@@ -17,9 +17,9 @@ int add(VM* vm, Instruction* instruction){
         return 1;
     }
 
-    Register* reg0 = find_register(vm->regs, instruction->operands[0], 31);
-    Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
-    Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
+    Register* reg0 = find_register(vm->regs, instruction->operands[0], 32);
+    Register* reg1 = find_register(vm->regs, instruction->operands[1], 32);
+    Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
@@ -45,9 +45,9 @@ int sub(VM* vm, Instruction* instruction){
         return 1;
     }
 
-    Register* reg0 = find_register(vm->regs, instruction->operands[0], 31);
-    Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
-    Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
+    Register* reg0 = find_register(vm->regs, instruction->operands[0], 32);
+    Register* reg1 = find_register(vm->regs, instruction->operands[1], 32);
+    Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
@@ -73,9 +73,9 @@ int multiply(VM* vm, Instruction* instruction){
         return 1;
     }
 
-    Register* reg0 = find_register(vm->regs, instruction->operands[0], 31);
-    Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
-    Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
+    Register* reg0 = find_register(vm->regs, instruction->operands[0], 32);
+    Register* reg1 = find_register(vm->regs, instruction->operands[1], 32);
+    Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
@@ -101,16 +101,16 @@ int divide(VM* vm, Instruction* instruction){
         return 1;
     }
 
-    Register* reg0 = find_register(vm->regs, instruction->operands[0], 31);
-    Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
-    Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
+    Register* reg0 = find_register(vm->regs, instruction->operands[0], 32);
+    Register* reg1 = find_register(vm->regs, instruction->operands[1], 32);
+    Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
         return 1;
     }
 
-    if (!reg1->data.value || !reg2->data.value){
+    if (!reg2->data.value){
         printf("Tried to divide by zero!\n");
         return 1;
     }
@@ -134,16 +134,16 @@ int mod(VM* vm, Instruction* instruction){
         return 1;
     }
 
-    Register* reg0 = find_register(vm->regs, instruction->operands[0], 31);
-    Register* reg1 = find_register(vm->regs, instruction->operands[1], 31);
-    Register* reg2 = find_register(vm->regs, instruction->operands[2], 31);
+    Register* reg0 = find_register(vm->regs, instruction->operands[0], 32);
+    Register* reg1 = find_register(vm->regs, instruction->operands[1], 32);
+    Register* reg2 = find_register(vm->regs, instruction->operands[2], 32);
 
     if (reg0 == NULL_REGISTER || reg1 == NULL_REGISTER || reg2 == NULL_REGISTER){
         printf("Not enough registers!\n");
         return 1;
     }
 
-    if (!reg1->data.value || !reg2->data.value){
+    if (!reg2->data.value){
         printf("Tried to mod by zero!\n");
         return 1;
     }

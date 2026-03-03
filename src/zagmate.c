@@ -157,6 +157,7 @@ ReturnStatus init_vtable(vtable* vtable) {
     vtable->register_handler = register_handler_vm;
     vtable->make = make_vm;
     vtable->reset = reset_vm;
+    vtable->append = append_vm;
     return OK;
 }
 
