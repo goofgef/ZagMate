@@ -1,5 +1,5 @@
-#include "zagmate_builtin.h"
-#include "zagmate.h"
+#include "byteweasel_builtin.h"
+#include "byteweasel.h"
 #include <stdio.h>
 
 int add(VM* vm, Instruction* instruction){

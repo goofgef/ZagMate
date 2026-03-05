@@ -1,14 +1,14 @@
-# ZagMate
+# ByteWeasel
 
 **A tiny, modular, register-based bytecode VM in pure C**  
 No AI slop today.
 
 [![C](https://img.shields.io/badge/language-C-blue.svg?style=flat-square)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub stars](https://img.shields.io/github/stars/goofgef/ZagMate?style=flat-square&color=yellow)](https://github.com/goofgef/ZagMate/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/goofgef/ByteWeasel?style=flat-square&color=yellow)](https://github.com/goofgef/ByteWeasel/stargazers)
 
-ZagMate is a lightweight, modular register-based VM with a easy-to-use API (if you know intermediate C).
-ZagMate is all about being dynamic and flexible.
+ByteWeasel is a lightweight, modular register-based VM with a easy-to-use API (if you know intermediate C).
+ByteWeasel is all about being dynamic and flexible.
 
 ### Why register-based?
 -Because register-based VMs are easier to map to machine code, are more effecient, and can be easier to optimize.
@@ -25,8 +25,8 @@ ZagMate is all about being dynamic and flexible.
 ### Quick Example (main.c)
 
 ```c
-#include "zagmate_builtin.h"
-#include "zagmate.h"
+#include "byteweasel_builtin.h"
+#include "byteweasel.h"
 
 #include <stdio.h>
 #include <stddef.h>
@@ -62,7 +62,7 @@ int main(){
 }
 ```
 ### Building
-To build ZagMate, you will need GCC, Make, and CMake
+To build ByteWeasel, you will need GCC, Make, and CMake
 
 ### Executable
 

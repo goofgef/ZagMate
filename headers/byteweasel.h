@@ -1,15 +1,15 @@
 #ifdef _WIN32
-  #ifdef ZAGMATE_EXPORTS
-    #define ZAGMATE_API __declspec(dllexport)
+  #ifdef BYTEWEASEL_EXPORTS
+    #define BYTEWEASEL_API __declspec(dllexport)
   #else
-    #define ZAGMATE_API __declspec(dllimport)
+    #define BYTEWEASEL_API __declspec(dllimport)
   #endif
 #else
-  #define ZAGMATE_API __attribute__((visibility("default")))
+  #define BYTEWEASEL_API __attribute__((visibility("default")))
 #endif
 
-#ifndef ZAGMATE_ZAGMATE_H
-#define ZAGMATE_ZAGMATE_H
+#ifndef BYTEWEASEL_BYTEWEASEL_H
+#define BYTEWEASEL_BYTEWEASEL_H
 #include <stdint.h>
 #include <stddef.h>
 
@@ -95,6 +95,6 @@ typedef struct VM {
     int64_t stack[256];
 } VM;
 
-ZAGMATE_API ReturnStatus init_vm(VM *vm, size_t capacity);
-ZAGMATE_API Register* find_register(VM* vm, int64_t addr, size_t count);
-#endif //ZAGMATE_ZAGMATE_H
+BYTEWEASEL_API ReturnStatus init_vm(VM *vm, size_t capacity);
+BYTEWEASEL_API Register* find_register(VM* vm, int64_t addr, size_t count);
+#endif //BYTEWEASEL_BYTEWEASEL_H

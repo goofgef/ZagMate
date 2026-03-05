@@ -1,4 +1,4 @@
-#include "zagmate.h"
+#include "byteweasel.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -95,7 +95,7 @@ ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
         }
     }
 
-    vm->pc = end;
+    vm->pc = old_pc;
     return OK;
 }
 
