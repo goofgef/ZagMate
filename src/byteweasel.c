@@ -46,7 +46,25 @@ ReturnStatus append_vm(VM *vm, Instruction instruction) {
 	//Since we are appending 1 instruction, just bump program_size by 1.
     vm->program_size++;
 
-    return 0;
+    return OK;
+}
+
+//Append multiple instructions
+
+ReturnStatus append_multiple_vm(VM *vm, Instruction instructions[], size_t count) {
+	NULL_CHECK_VM(vm);
+
+	NULL_CHECK_BYTECODE(vm->bytecode);
+
+    if (vm->program_size >= vm->capacity || vm->capacity < count) {
+        return FULL_BYTECODE;
+    }
+
+	for (size_t i = 0; i < count; i++){
+		append_vm(vm, instructions[i]);
+	}
+
+	return OK;
 }
 
 ReturnStatus run_vm_cycle(VM *vm) {
@@ -312,6 +330,7 @@ vtable default_vtable = {
     .make             = make_vm,
     .reset            = reset_vm,
     .append           = append_vm,
+	.append_multiple  = append_multiple_vm,
     .run_range        = run_range_vm,
     .find_symbol      = find_symbol_vm,
     .register_symbol  = register_symbol_vm,

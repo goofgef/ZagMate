@@ -82,6 +82,7 @@ typedef struct {
     Instruction (*make)(uint16_t, uint8_t, int64_t[]);
 
     ReturnStatus (*append)(struct VM*, struct Instruction);
+	ReturnStatus (*append_multiple)(struct VM*, struct Instruction[], size_t);
     ReturnStatus (*write)(struct VM*, Instruction*, size_t);
     ReturnStatus (*run)(struct VM*);
     ReturnStatus (*clean)(struct VM*);
