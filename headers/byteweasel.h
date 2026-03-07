@@ -120,4 +120,5 @@ typedef struct VM {
 
 BYTEWEASEL_API ReturnStatus init_vm(VM *vm, Config config);
 BYTEWEASEL_API Register* find_register(VM* vm, int64_t addr, size_t count);
+BYTEWEASEL_API Config default_config();
 #endif //BYTEWEASEL_BYTEWEASEL_H

@@ -351,3 +351,15 @@ Register* find_register(VM* vm, int64_t addr, size_t count){
     return &vm->regs[(size_t)addr];
 }
 
+//Default config
+
+Config default_config(){
+	Config default_config_var = {
+		.register_count = 32,
+		.stack_size = 1024,
+		.handler_count = 256,
+		.symbol_count = 256,
+		.capacity = 1024
+	};
+	return default_config_var;
+}
