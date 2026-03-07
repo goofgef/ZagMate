@@ -290,9 +290,9 @@ ReturnStatus dump_vm(VM *vm, char* table[]) {
     printf("Bytecode dump:\n");
     for (size_t i = 0; i < vm->program_size; i++) {
 		Instruction current_ins = vm->bytecode[i];
-        printf("%u   %s ", i, table[current_ins.opcode]);
+        printf("%lu   %s ", i, table[current_ins.opcode]);
 		for (size_t j = 0; j < current_ins.operand_count; j++) {
-			printf("%d ", current_ins.operands[j]);
+			printf("%ld ", current_ins.operands[j]);
 		}
 		printf("\n");
     }
