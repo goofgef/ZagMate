@@ -74,7 +74,14 @@ int main(int argc, char *argv[]) {
         return 0;
     }else{
         VM vm = {0};
-        init_vm(&vm, 2);
+		Config config = {
+			.register_count = 64,
+			.stack_size = 1024,
+			.handler_count = 256,
+			.symbol_count = 1024,
+			.capacity = 1024
+		};
+        init_vm(&vm, config);
 
         vm.vtable->register_handler(&vm, 0, &add);
         vm.vtable->register_handler(&vm, 1, &sub);

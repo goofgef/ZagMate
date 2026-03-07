@@ -5,16 +5,22 @@
 #include <inttypes.h>
 #include <string.h>
 
+#define NULL_CHECK_VM(vm); \
+    do { \
+        if (!(vm)) return NULL_VM; \
+    } while(0)
+
+#define NULL_CHECK_BYTECODE(bytecode); \
+    do { \
+        if (!(bytecode)) return NULL_BYTECODE; \
+    } while(0)
+
 //Write a whole allocated list of bytecode to vm->bytecode and set program_size to len
 
 ReturnStatus write_vm(VM *vm, Instruction* bytecode, size_t len) {
-    if (!vm){
-        return NULL_VM;
-    }
-    
-    if (!bytecode){
-        return NULL_BYTECODE;
-    }
+    NULL_CHECK_VM(vm);
+
+	NULL_CHECK_BYTECODE(bytecode);
 
     vm->bytecode = bytecode;
     vm->program_size = len;
@@ -26,13 +32,9 @@ ReturnStatus write_vm(VM *vm, Instruction* bytecode, size_t len) {
 //Append a single instruction to the vm and update program_size by 1
 
 ReturnStatus append_vm(VM *vm, Instruction instruction) {
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
 
-    if (!vm->bytecode){
-        return NULL_BYTECODE;
-    }
+	NULL_CHECK_BYTECODE(vm->bytecode);
     if (vm->program_size >= vm->capacity){
         return FULL_BYTECODE;
     }
@@ -48,12 +50,8 @@ ReturnStatus append_vm(VM *vm, Instruction instruction) {
 }
 
 ReturnStatus run_vm_cycle(VM *vm) {
-    if (!vm){
-        return NULL_VM;
-    }
-    if (!vm->bytecode){
-        return NULL_BYTECODE;
-    }
+    NULL_CHECK_VM(vm);
+	NULL_CHECK_BYTECODE(vm->bytecode);
 
 	//Fetch current instruction based off of pc
     Instruction current_instruction = vm->bytecode[vm->pc];
@@ -85,9 +83,7 @@ size_t find_symbol_vm(VM* vm, const char* name) {
 }
 
 ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
 
     //Set symbols[count].field to corresponding parameter
     vm->symbols[vm->symbol_count].name = name;
@@ -97,9 +93,7 @@ ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
 }
 
 ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
 
     size_t old_pc = vm->pc;
     vm->pc = start;
@@ -117,9 +111,7 @@ ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
 }
 
 ReturnStatus run_vm(VM *vm) {
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
     //Run until vm->pc < vm->program_size and not vm->halted
     while (vm->pc < vm->program_size && !vm->halted) {
         run_vm_cycle(vm);
@@ -149,17 +141,13 @@ ReturnStatus register_handler_vm(VM* vm, uint8_t opcode, Handler handler) {
     if (!handler){
         return NULL_HANDLER;
     }
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
     vm->handlers[opcode] = handler;
     return 0;
 }
 
 ReturnStatus clean_vm(VM *vm) {
-    if (!vm){
-        return NULL_VM;
-    }
+    NULL_CHECK_VM(vm);
 
     for (size_t i = 0; i < vm->program_size; i++) {
         free(vm->bytecode[i].operands);
@@ -175,9 +163,7 @@ ReturnStatus clean_vm(VM *vm) {
 }
 
 ReturnStatus reset_vm(VM* vm, size_t capacity) {
-    if (!vm) {
-        return NULL_VM;
-    }
+	NULL_CHECK_VM(vm);
 
     for (size_t i = 0; i < vm->program_size; i++) {
         free(vm->bytecode[i].operands);
@@ -205,9 +191,9 @@ ReturnStatus reset_vm(VM* vm, size_t capacity) {
 
 //Serialize bytecode
 ReturnStatus serialize_vm(VM *vm, const char *path) {
-    if (!vm)       return NULL_VM;
+    NULL_CHECK_VM(vm);
     if (!path)     return NULL_PATH;
-    if (!vm->bytecode) return NULL_BYTECODE;
+    NULL_CHECK_BYTECODE(vm->bytecode);
 
     FILE *file = fopen(path, "wb");
     if (!file){
@@ -240,7 +226,7 @@ ReturnStatus serialize_vm(VM *vm, const char *path) {
 
 //Deserialize bytecode
 ReturnStatus deserialize_vm(VM *vm, const char *path) {
-    if (!vm)   return NULL_VM;
+    NULL_CHECK_VM(vm);
     if (!path) return NULL_PATH;
 
     FILE* f = fopen(path, "rb");
@@ -300,7 +286,7 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
 }
 
 ReturnStatus dump_vm(VM *vm, char* table[]) {
-    if (!vm)   return NULL_VM;
+    NULL_CHECK_VM(vm);
     printf("Bytecode dump:\n");
     for (size_t i = 0; i < vm->program_size; i++) {
 		Instruction current_ins = vm->bytecode[i];
@@ -329,18 +315,24 @@ vtable default_vtable = {
     .dump             = dump_vm
 };
 
-ReturnStatus init_vm(VM *vm, size_t capacity) {
+ReturnStatus init_vm(VM *vm, Config config) {
 	//Set most fields to null/zero
     vm->program_size = 0;
     vm->bytecode = NULL;
     vm->vtable = &default_vtable;
 
-    vm->capacity = capacity;
+    vm->capacity = config.capacity;
 
     vm->pc = 0;
     vm->sp = 0;
 
     vm->halted = 0;
+
+	vm->handlers = malloc(sizeof(Handler) * config.handler_count);
+	vm->regs = malloc(sizeof(Register) * config.register_count);
+
+	vm->symbols = malloc(sizeof(Symbol) * config.symbol_count);
+	vm->stack = malloc(sizeof(int) * config.stack_size);
 
     //Every register at first contains 0
     for (size_t i = 0; i < 32; i++){

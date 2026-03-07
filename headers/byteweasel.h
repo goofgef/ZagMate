@@ -43,6 +43,15 @@ typedef struct VM VM;
 typedef struct Instruction Instruction;
 typedef int (*Handler)(struct VM*, struct Instruction*);
 
+//Config struct, basically a config file but a struct, defines sizes for VM
+typedef struct{
+	size_t register_count;
+	size_t stack_size;
+	size_t handler_count;
+	size_t symbol_count;
+	size_t capacity;
+}Config;
+
 //Like an assembly label, just a string that corresponds to a PC value
 typedef struct {
     char* name;
@@ -51,7 +60,6 @@ typedef struct {
 
 //Register, stores a value
 typedef struct {
-
 	//Everything shared the same memory
     union {
         void* ptr;
@@ -91,7 +99,7 @@ typedef struct {
 
 //Core VM struct, contains everything from handlers to bytecode to 
 typedef struct VM {
-	vtable *vtable;
+	vtable* vtable;
 
 	//Halted flag
     int halted;
@@ -102,14 +110,14 @@ typedef struct VM {
     size_t capacity;
     size_t symbol_count;
 
-    Handler handlers[256];
+    Handler* handlers;
     Instruction* bytecode;
-    Register regs[32];
+    Register* regs;
 
-    Symbol symbols[32];
-    int64_t stack[256];
+    Symbol* symbols;
+    int64_t* stack;
 } VM;
 
-BYTEWEASEL_API ReturnStatus init_vm(VM *vm, size_t capacity);
+BYTEWEASEL_API ReturnStatus init_vm(VM *vm, Config config);
 BYTEWEASEL_API Register* find_register(VM* vm, int64_t addr, size_t count);
 #endif //BYTEWEASEL_BYTEWEASEL_H
