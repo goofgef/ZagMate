@@ -71,20 +71,20 @@ typedef struct {
 
 // 1 instruction, contains opcode, corresponds to handler, values to work on, and the count of operands
 typedef struct Instruction {
-    uint8_t opcode;
+    uint16_t opcode;
     int64_t* operands;
     uint8_t operand_count;
 } Instruction;
 
 typedef struct {
 	//Bunch of pointers to functions with their return type and parameters
-    Instruction (*make)(uint8_t, uint8_t, int64_t[]);
+    Instruction (*make)(uint16_t, uint8_t, int64_t[]);
 
     ReturnStatus (*append)(struct VM*, struct Instruction);
     ReturnStatus (*write)(struct VM*, Instruction*, size_t);
     ReturnStatus (*run)(struct VM*);
     ReturnStatus (*clean)(struct VM*);
-    ReturnStatus (*register_handler)(struct VM*, uint8_t, Handler);
+    ReturnStatus (*register_handler)(struct VM*, uint16_t, Handler);
 
     ReturnStatus (*reset)(struct VM*);
     ReturnStatus (*run_range)(struct VM*, size_t, size_t);

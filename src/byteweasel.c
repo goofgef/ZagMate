@@ -119,7 +119,7 @@ ReturnStatus run_vm(VM *vm) {
     return OK;
 }
 
-Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
+Instruction make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[]){
     Instruction instruction;
     instruction.opcode = opcode;
     instruction.operand_count = operand_count;
@@ -137,7 +137,7 @@ Instruction make_vm(uint8_t opcode, uint8_t operand_count, int64_t operands[]){
     return instruction;
 }
 
-ReturnStatus register_handler_vm(VM* vm, uint8_t opcode, Handler handler) {
+ReturnStatus register_handler_vm(VM* vm, uint16_t opcode, Handler handler) {
     if (!handler){
         return NULL_HANDLER;
     }
@@ -186,7 +186,7 @@ ReturnStatus reset_vm(VM* vm) {
 /* file format:
  * [uint32_t magic] [size_t program_size] [instructions]
  * each instruction:
- * [uint8_t opcode] [uint8_t operand_count] [int64_t operands * operand_count]
+ * [uint16_t opcode] [uint8_t operand_count] [int64_t operands * operand_count]
 */
 
 //Serialize bytecode
@@ -211,7 +211,7 @@ ReturnStatus serialize_vm(VM *vm, const char *path) {
     for (size_t i = 0; i < vm->program_size; i++) {
         Instruction* ins = &vm->bytecode[i];
 
-        fwrite(&ins->opcode, sizeof(uint8_t), 1, file);
+        fwrite(&ins->opcode, sizeof(uint16_t), 1, file);
         fwrite(&ins->operand_count, sizeof(uint8_t), 1, file);
 
         //Write each operand manually
@@ -257,7 +257,7 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
     for (size_t i = 0; i < program_size; i++) {
         Instruction* ins = &bytecode[i];
 
-        fread(&ins->opcode, sizeof(uint8_t), 1, f);
+        fread(&ins->opcode, sizeof(uint16_t), 1, f);
         fread(&ins->operand_count, sizeof(uint8_t), 1, f);
 
         if (ins->operand_count > 0) {
