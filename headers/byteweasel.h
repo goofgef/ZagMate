@@ -14,7 +14,6 @@
 #include <stddef.h>
 
 #define NULL_REGISTER ((Register*) NULL)
-#define NULL_INSTRUCTION_STRUCT ((Instruction*) NULL)
 #define BW_SERIAL_MAGIC 0x42454C4C //BELL
 
 //Globals: name_vm, VTable names: name

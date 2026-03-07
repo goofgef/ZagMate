@@ -99,8 +99,10 @@ int main(int argc, char *argv[]) {
         vm.regs[2].data.value = 7;
 
         vm.vtable->write(&vm, bytecode, 2);
+
 		char* table[] = {"ADD", "SUB"};
         vm.vtable->dump(&vm, table);
+
         vm.vtable->run(&vm);
 
         printf("Result in r0: %" PRId64 "\n", vm.regs[0].data.value); //18

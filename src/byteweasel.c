@@ -127,7 +127,7 @@ Instruction make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[]){
 
     if (!instruction.operands){
         instruction.operand_count = 0;
-        return *NULL_INSTRUCTION_STRUCT;
+        return instruction;
     }
 
     for (size_t i = 0; i < operand_count; i++){
@@ -156,6 +156,10 @@ ReturnStatus clean_vm(VM *vm) {
     vm->program_size = 0;
 
     free(vm->bytecode);
+	free(vm->handlers);
+	free(vm->stack);
+	free(vm->regs);
+	free(vm->symbols);
 	
     vm->bytecode = NULL;
 
@@ -333,7 +337,7 @@ ReturnStatus init_vm(VM *vm) {
 	vm->regs = malloc(sizeof(Register) * vm->config.register_count);
 
 	vm->symbols = malloc(sizeof(Symbol) * vm->config.symbol_count);
-	vm->stack = malloc(sizeof(int) * vm->config.stack_size);
+	vm->stack = malloc(sizeof(int64_t) * vm->config.stack_size);
 
     //Every register at first contains 0
     for (size_t i = 0; i < vm->config.register_count; i++){
