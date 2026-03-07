@@ -86,6 +86,7 @@ typedef struct {
 
     size_t (*find_symbol)(struct VM*, const char*);
     ReturnStatus (*register_symbol)(struct VM*, char*, size_t);
+    ReturnStatus (*dump)(struct VM*, char*[]);
 } vtable;
 
 //Core VM struct, contains everything from handlers to bytecode to 
