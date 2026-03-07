@@ -17,6 +17,8 @@
 #define NULL_INSTRUCTION_STRUCT ((Instruction*) NULL)
 #define BW_SERIAL_MAGIC 0x42454C4C //BELL
 
+//Globals: name_vm, VTable names: name
+
 //This is a list of enums, each representing a return status. NULL_WHATEVER is used when WHATEVER isnt found/NULL
 typedef enum{
     OK = 0,
