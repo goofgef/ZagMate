@@ -86,7 +86,7 @@ typedef struct {
     ReturnStatus (*clean)(struct VM*);
     ReturnStatus (*register_handler)(struct VM*, uint8_t, Handler);
 
-    ReturnStatus (*reset)(struct VM*, size_t);
+    ReturnStatus (*reset)(struct VM*);
     ReturnStatus (*run_range)(struct VM*, size_t, size_t);
 
 	ReturnStatus (*serialize)(struct VM*, const char*);
@@ -110,6 +110,7 @@ typedef struct VM {
     size_t capacity;
     size_t symbol_count;
 
+	Config config;
     Handler* handlers;
     Instruction* bytecode;
     Register* regs;
@@ -118,7 +119,7 @@ typedef struct VM {
     int64_t* stack;
 } VM;
 
-BYTEWEASEL_API ReturnStatus init_vm(VM *vm, Config config);
+BYTEWEASEL_API ReturnStatus init_vm(VM *vm);
 BYTEWEASEL_API Register* find_register(VM* vm, int64_t addr, size_t count);
 BYTEWEASEL_API Config default_config();
 #endif //BYTEWEASEL_BYTEWEASEL_H

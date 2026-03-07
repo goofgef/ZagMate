@@ -81,7 +81,8 @@ int main(int argc, char *argv[]) {
 			.symbol_count = 1024,
 			.capacity = 1024
 		};
-        init_vm(&vm, config);
+        vm.config = config;
+        init_vm(&vm);
 
         vm.vtable->register_handler(&vm, 0, &add);
         vm.vtable->register_handler(&vm, 1, &sub);

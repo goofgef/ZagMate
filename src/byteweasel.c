@@ -162,7 +162,7 @@ ReturnStatus clean_vm(VM *vm) {
     return OK;
 }
 
-ReturnStatus reset_vm(VM* vm, size_t capacity) {
+ReturnStatus reset_vm(VM* vm) {
 	NULL_CHECK_VM(vm);
 
     for (size_t i = 0; i < vm->program_size; i++) {
@@ -176,8 +176,8 @@ ReturnStatus reset_vm(VM* vm, size_t capacity) {
     vm->pc = 0;
     vm->halted = 0;
     vm->sp = 0;
-    vm->capacity = capacity;
-    for (size_t i = 0; i < 32; i++) {
+    vm->capacity = vm->config.capacity;
+    for (size_t i = 0; i < vm->config.register_count; i++) {
         vm->regs[i].data.value = 0;
     }
     return OK;
@@ -296,6 +296,7 @@ ReturnStatus dump_vm(VM *vm, char* table[]) {
 		}
 		printf("\n");
     }
+	return OK;
 }
 
 //Default vtable of function pointers
@@ -315,27 +316,27 @@ vtable default_vtable = {
     .dump             = dump_vm
 };
 
-ReturnStatus init_vm(VM *vm, Config config) {
+ReturnStatus init_vm(VM *vm) {
 	//Set most fields to null/zero
     vm->program_size = 0;
     vm->bytecode = NULL;
     vm->vtable = &default_vtable;
 
-    vm->capacity = config.capacity;
+    vm->capacity = vm->config.capacity;
 
     vm->pc = 0;
     vm->sp = 0;
 
     vm->halted = 0;
 
-	vm->handlers = malloc(sizeof(Handler) * config.handler_count);
-	vm->regs = malloc(sizeof(Register) * config.register_count);
+	vm->handlers = malloc(sizeof(Handler) * vm->config.handler_count);
+	vm->regs = malloc(sizeof(Register) * vm->config.register_count);
 
-	vm->symbols = malloc(sizeof(Symbol) * config.symbol_count);
-	vm->stack = malloc(sizeof(int) * config.stack_size);
+	vm->symbols = malloc(sizeof(Symbol) * vm->config.symbol_count);
+	vm->stack = malloc(sizeof(int) * vm->config.stack_size);
 
     //Every register at first contains 0
-    for (size_t i = 0; i < 32; i++){
+    for (size_t i = 0; i < vm->config.register_count; i++){
         vm->regs[i].data.value = 0;
     }
     return OK;
