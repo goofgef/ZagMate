@@ -107,8 +107,12 @@ ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
     NULL_CHECK_VM(vm);
 	if (vm->symbol_count >= vm->config.symbol_size) return OUT_OF_BOUNDS;
 
+    char* name_copy = strdup(name);
+    if (!name_copy) {
+        return FAILED_MALLOC;
+    }
     //Set symbols[count].field to corresponding parameter
-    vm->symbols[vm->symbol_count].name = name;
+    vm->symbols[vm->symbol_count].name = name_copy;
     vm->symbols[vm->symbol_count].pc = pc;
     vm->symbol_count++;
     return OK;
