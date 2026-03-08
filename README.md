@@ -1,20 +1,20 @@
 # ByteWeasel
 
-**A tiny, modular, register-based bytecode VM in pure C**  
+**A tiny, modular, register-based bytecode VM framework in pure C**  
 No AI slop today.
 
 [![C](https://img.shields.io/badge/language-C-blue.svg?style=flat-square)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub stars](https://img.shields.io/github/stars/goofgef/ByteWeasel?style=flat-square&color=yellow)](https://github.com/goofgef/ByteWeasel/stargazers)
 
-ByteWeasel is a lightweight, modular register-based VM with a easy-to-use API (if you know intermediate C).
+ByteWeasel is a lightweight, modular register-based VM framework with an easy-to-use API (if you know intermediate C).
 ByteWeasel is all about being dynamic and flexible.
 
 ### Why register-based?
--Because register-based VMs are easier to map to machine code, are more effecient, and can be easier to optimize.
+-Because register-based VMs are easier to map to machine code, are more efficient, and can be easier to optimize.
 
 ### Why did you make this?
--Because as open-source modern VMs are, like LuaVM, they arent open-source at heart. Sure, you can run it or touch its internals but your average coder probably wont be able to, say, add his own opcode. I dislike this, it feels like there is a massive closed source door for many VMs if you dont understand it. This is my attempt to fix that.
+-Because as open-source modern VMs are, like LuaVM, they aren't open-source at heart. Sure, you can run it or touch its internals but your average coder probably wont be able to, say, add his own opcode. I dislike this, it feels like there is a massive closed source door for many VMs if you dont understand it. This is my attempt to fix that.
 
 ### Features
 - Pure C, no major dependencies
