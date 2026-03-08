@@ -56,9 +56,9 @@ ReturnStatus append_multiple_vm(VM *vm, Instruction instructions[], size_t count
 
 	NULL_CHECK_BYTECODE(vm->bytecode);
 
-    if (vm->program_size >= vm->capacity || vm->capacity < count) {
-        return FULL_BYTECODE;
-    }
+	if (vm->program_size + count > vm->capacity) {
+    	return FULL_BYTECODE;
+	}
 
 	for (size_t i = 0; i < count; i++){
 		append_vm(vm, instructions[i]);
@@ -73,6 +73,9 @@ ReturnStatus run_vm_cycle(VM *vm) {
 
 	//Fetch current instruction based off of pc
     Instruction current_instruction = vm->bytecode[vm->pc];
+	if (current_instruction.opcode > vm->config.handler_count){
+		return OUT_OF_BOUNDS;
+	}
     //Opcode will always represent the correct handler if user uses register_handler, because we set handlers[opcode] to *func
     Handler handler = vm->handlers[current_instruction.opcode];
 
@@ -102,6 +105,7 @@ size_t find_symbol_vm(VM* vm, const char* name) {
 
 ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
     NULL_CHECK_VM(vm);
+	if (vm->symbol_count >= vm->config.symbol_count) return OUT_OF_BOUNDS;
 
     //Set symbols[count].field to corresponding parameter
     vm->symbols[vm->symbol_count].name = name;
@@ -258,7 +262,11 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
 
     //Check magic to make sure it matches
     uint32_t magic = 0;
-    fread(&magic, sizeof(uint32_t), 1, f);
+    int fread_ret_1 = fread(&magic, sizeof(uint32_t), 1, f);
+	if (fread_ret_1){
+		return BAD_READ;
+	}
+
     if (magic != BW_SERIAL_MAGIC) {
         fclose(f);
         return UNEQUAL_MAGIC;
@@ -266,8 +274,10 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
 
     // Read program size
     size_t program_size = 0;
-    fread(&program_size, sizeof(size_t), 1, f);
-
+    int fread_ret_2 = fread(&program_size, sizeof(size_t), 1, f);
+	if (fread_ret_2){
+		return BAD_READ;
+	}
     // Allocate bytecode array
     Instruction* bytecode = malloc(program_size * sizeof(Instruction));
     if (!bytecode) {
@@ -279,9 +289,14 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
     for (size_t i = 0; i < program_size; i++) {
         Instruction* ins = &bytecode[i];
 
-        fread(&ins->opcode, sizeof(uint16_t), 1, f);
-        fread(&ins->operand_count, sizeof(uint8_t), 1, f);
-
+        int fread_ret_3 = fread(&ins->opcode, sizeof(uint16_t), 1, f);
+		if (fread_ret_3){
+			return BAD_READ;
+		}
+        int fread_ret_4 = fread(&ins->operand_count, sizeof(uint8_t), 1, f);
+		if (fread_ret_4){
+			return BAD_READ;
+		}
         if (ins->operand_count > 0) {
             ins->operands = malloc(ins->operand_count * sizeof(int64_t));
             if (!ins->operands) {
@@ -293,11 +308,15 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
                 fclose(f);
                 return NULL_OPERANDS;
             }
-            fread(ins->operands, sizeof(int64_t), ins->operand_count, f);
+            int fread_ret_5 = fread(ins->operands, sizeof(int64_t), ins->operand_count, f);
+			if (fread_ret_5){
+				return BAD_READ;
+			}
         } else {
             ins->operands = NULL;
         }
     }
+
 
     fclose(f);
 
@@ -312,7 +331,7 @@ ReturnStatus dump_vm(VM *vm, char* table[]) {
     printf("Bytecode dump:\n");
     for (size_t i = 0; i < vm->program_size; i++) {
 		Instruction current_ins = vm->bytecode[i];
-        printf("%lu   %s ", i, table[current_ins.opcode]);
+        printf("%zu   %s ", i, table[current_ins.opcode]);
 		for (size_t j = 0; j < current_ins.operand_count; j++) {
 			printf("%ld ", current_ins.operands[j]);
 		}
@@ -353,10 +372,30 @@ ReturnStatus init_vm(VM *vm) {
     vm->halted = 0;
 
 	vm->handlers = malloc(sizeof(Handler) * vm->config.handler_count);
+	if (!vm->handlers) {
+		return FAILED_MALLOC;
+	}
+
 	vm->regs = malloc(sizeof(Register) * vm->config.register_count);
+	if (!vm->regs) {
+		free(vm->handlers);
+		return FAILED_MALLOC;
+	}
 
 	vm->symbols = malloc(sizeof(Symbol) * vm->config.symbol_count);
+	if (!vm->symbols) {
+		free(vm->handlers);
+		free(vm->regs);
+		return FAILED_MALLOC;
+	}
+
 	vm->stack = malloc(sizeof(int64_t) * vm->config.stack_size);
+	if (!vm->stack) {
+		free(vm->handlers);
+		free(vm->regs);
+		free(vm->symbols);
+		return FAILED_MALLOC;
+    }
 
     //Every register at first contains 0
     for (size_t i = 0; i < vm->config.register_count; i++){

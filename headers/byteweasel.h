@@ -36,6 +36,8 @@ typedef enum{
     NULL_OPERANDS,
     NULL_HANDLER,
     HALTED,
+	OUT_OF_BOUNDS,
+	BAD_READ,
     GENERAL_NULL
 }ReturnStatus;
 
