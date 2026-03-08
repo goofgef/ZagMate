@@ -286,7 +286,7 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
     //Check magic to make sure it matches
     uint32_t magic = 0;
     int fread_ret_1 = fread(&magic, sizeof(uint32_t), 1, f);
-	if (fread_ret_1){
+	if (!fread_ret_1){
 		return BAD_READ;
 	}
 
@@ -298,7 +298,7 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
     // Read program size
     size_t program_size = 0;
     int fread_ret_2 = fread(&program_size, sizeof(size_t), 1, f);
-	if (fread_ret_2){
+	if (!fread_ret_2){
 		return BAD_READ;
 	}
     // Allocate bytecode array
@@ -313,11 +313,11 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
         Instruction* ins = &bytecode[i];
 
         int fread_ret_3 = fread(&ins->opcode, sizeof(uint16_t), 1, f);
-		if (fread_ret_3){
+		if (!fread_ret_3){
 			return BAD_READ;
 		}
         int fread_ret_4 = fread(&ins->operand_count, sizeof(uint8_t), 1, f);
-		if (fread_ret_4){
+		if (!fread_ret_4){
 			return BAD_READ;
 		}
         if (ins->operand_count > 0) {
@@ -332,7 +332,7 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
                 return NULL_OPERANDS;
             }
             int fread_ret_5 = fread(ins->operands, sizeof(int64_t), ins->operand_count, f);
-			if (fread_ret_5){
+			if (!fread_ret_5){
 				return BAD_READ;
 			}
         } else {

@@ -1,4 +1,4 @@
-**v1.0.1 - ByteWeasel**
+**v1.0.2 - ByteWeasel**
 
 **v1.0.0**
 -Added CHANGELOG.md
@@ -8,7 +8,10 @@
 -Made vtable inline with init_vm, gave it static modifier.
 -Added comments to main.c and updated README.md code example
 
-**What changed on v1.0.1?**
+**v1.0.1**
 -Added DataType to register struct
 -Added DataType checking to add & sub handler
 -Added ASCII art weasel face
+
+**What changed on v1.0.2?**
+-Stopped doing if(fread_ret_n) and fixed it to if (!fread_ret_n)
