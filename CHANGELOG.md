@@ -1,4 +1,4 @@
-**v1.0.2 - ByteWeasel**
+**v1.0.3 - ByteWeasel**
 
 **v1.0.0**
 -Added CHANGELOG.md
@@ -13,5 +13,9 @@
 -Added DataType checking to add & sub handler
 -Added ASCII art weasel face
 
-**What changed on v1.0.2?**
+**v1.0.2**
 -Stopped doing if(fread_ret_n) and fixed it to if (!fread_ret_n)
+
+**What changed on v1.0.3?**
+-Added optimized flag to config
+-It is off by default and in main.c

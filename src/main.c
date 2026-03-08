@@ -92,7 +92,8 @@ int main(int argc, char *argv[]) {
 			.stack_size = 1024,
 			.handler_count = 256,
 			.symbol_size = 1024,
-			.capacity = 1024
+			.capacity = 1024,
+            .optimized = 0
 		};
 		//Set vm.config to the config variable we declared
         vm.config = config;

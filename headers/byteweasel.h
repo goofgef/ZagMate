@@ -59,6 +59,7 @@ typedef struct{
 	size_t handler_count;
 	size_t symbol_size;
 	size_t capacity;
+	int optimized;
 }Config;
 
 //Like an assembly label, just a string that corresponds to a PC value

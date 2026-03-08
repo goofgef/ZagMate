@@ -138,30 +138,70 @@ ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
 }
 
 ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
-    NULL_CHECK_VM(vm);
+	if (vm->config.optimized) {
+		if (!vm) return NULL_VM;
+		if (!vm->bytecode) return NULL_BYTECODE;
+		if (start >= vm->program_size || end > vm->program_size) return OUT_OF_BOUNDS;
+		if (start >= end) return OK;
 
-    size_t old_pc = vm->pc;
-    vm->pc = start;
+		Instruction* bytecode = vm->bytecode;
+		Handler* handlers = vm->handlers;
+		size_t old_pc = vm->pc;
+		vm->pc = start;
 
-    while (vm->pc < end && vm->pc < vm->program_size && !vm->halted) {
-        run_vm_cycle(vm);
-        if (vm->pc > end){
-            break;
-        }
-    }
+		while (vm->pc < end && !vm->halted) {
+			Instruction* ins = &bytecode[vm->pc];
+			vm->pc++;
+			if (handlers[ins->opcode](vm, ins) != 0) {
+				vm->halted = 1;
+				vm->pc = old_pc;
+				return HALTED;
+			}
+			if (vm->pc > end) break;
+		}
 
-	//Return to original pc before calling run_range. 
-    vm->pc = old_pc;
-    return OK;
+		vm->pc = old_pc;
+		return OK;
+	}
+
+	NULL_CHECK_VM(vm);
+	size_t old_pc = vm->pc;
+	vm->pc = start;
+
+	//run while pc < end and pc < program size and vm isnt halted
+	while (vm->pc < end && vm->pc < vm->program_size && !vm->halted) {
+		run_vm_cycle(vm);
+		if (vm->pc > end) break;
+	}
+
+	vm->pc = old_pc;
+	return OK;
 }
 
 ReturnStatus run_vm(VM *vm) {
-    NULL_CHECK_VM(vm);
-    //Run until vm->pc < vm->program_size and not vm->halted
-    while (vm->pc < vm->program_size && !vm->halted) {
-        run_vm_cycle(vm);
-    }
-    return OK;
+	if (vm->config.optimized) {
+		if (!vm) return NULL_VM;
+		if (!vm->bytecode) return NULL_BYTECODE;
+
+		Instruction* bytecode = vm->bytecode;
+		Handler* handlers = vm->handlers;
+		size_t program_size = vm->program_size;
+
+		while (vm->pc < program_size && !vm->halted) {
+			Instruction* ins = &bytecode[vm->pc];
+			vm->pc++;
+			if (handlers[ins->opcode](vm, ins) != 0) {
+				vm->halted = 1;
+				return HALTED;
+			}
+		}
+		return OK;
+	}
+	NULL_CHECK_VM(vm);
+	while (vm->pc < vm->program_size && !vm->halted) {
+		run_vm_cycle(vm);
+	}
+	return OK;
 }
 
 ReturnStatus make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[], Instruction* buffer){
@@ -445,7 +485,8 @@ Config default_config(){
 		.stack_size = 1024,
 		.handler_count = 256,
 		.symbol_size = 256,
-		.capacity = 1024
+		.capacity = 1024,
+		.optimized = 0
 	};
 	return default_config_var;
 }
