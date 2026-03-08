@@ -41,6 +41,12 @@ typedef enum{
     GENERAL_NULL
 }ReturnStatus;
 
+typedef enum{
+	TYPE_INT,
+	TYPE_FLOAT,
+	TYPE_PTR
+}DataType;
+
 //Declare typedefs so i can use it before we define it.
 typedef struct VM VM;
 typedef struct Instruction Instruction;
@@ -63,6 +69,8 @@ typedef struct {
 
 //Register, stores a value
 typedef struct {
+	//Type safety thing??
+	DataType type;
 	//Everything shared the same memory
     union {
         void* ptr;

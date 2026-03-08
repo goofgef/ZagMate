@@ -30,6 +30,10 @@ int add(VM* vm, Instruction* instruction){
         return 1;
     }
 
+    if (reg1->type != TYPE_INT || reg2->type != TYPE_INT){
+        fprintf(stderr,"Type mismatch!\n");
+        return 1;
+    }
     reg0->data.value = reg1->data.value + reg2->data.value;
     return 0;
 }
@@ -58,6 +62,10 @@ int sub(VM* vm, Instruction* instruction){
         return 1;
     }
 
+    if (reg1->type != TYPE_INT || reg2->type != TYPE_INT){
+        fprintf(stderr,"Type mismatch!\n");
+        return 1;
+    }
     reg0->data.value = reg1->data.value - reg2->data.value;
     return 0;
 }
