@@ -81,7 +81,7 @@ typedef struct Instruction {
 
 typedef struct {
 	//Bunch of pointers to functions with their return type and parameters
-    Instruction (*make)(uint16_t, uint8_t, int64_t[]);
+    ReturnStatus (*make)(uint16_t, uint8_t, int64_t[], Instruction*);
 
     ReturnStatus (*append)(struct VM*, struct Instruction);
 	ReturnStatus (*append_multiple)(struct VM*, struct Instruction[], size_t);

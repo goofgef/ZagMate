@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
         int64_t ops0[] = {0, 1, 2};
         int64_t ops1[] = {1, 1, 2};
 
-        bytecode[0] = vm.vtable->make(0, 3, ops0);
-        bytecode[1] = vm.vtable->make(1, 3, ops1);
+        vm.vtable->make(0, 3, ops0, &bytecode[0]);
+        vm.vtable->make(1, 3, ops1, &bytecode[1]);
 
         vm.regs[1].data.value = 11;
         vm.regs[2].data.value = 7;

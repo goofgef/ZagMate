@@ -145,22 +145,22 @@ ReturnStatus run_vm(VM *vm) {
     return OK;
 }
 
-Instruction make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[]){
-    Instruction instruction;
-    instruction.opcode = opcode;
-    instruction.operand_count = operand_count;
-    instruction.operands = malloc(operand_count * sizeof(int64_t));
+ReturnStatus make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[], Instruction* buffer){
+	//Initial setup
+    buffer->opcode = opcode;
+    buffer->operand_count = operand_count;
+    buffer->operands = malloc(operand_count * sizeof(int64_t));
 
-    if (!instruction.operands){
-        instruction.operand_count = 0;
-        return instruction;
+    if (!buffer->operands){
+		//if operands failed to be malloced
+        return FAILED_MALLOC;
     }
 
     for (size_t i = 0; i < operand_count; i++){
-        instruction.operands[i] = operands[i];
+        buffer->operands[i] = operands[i];
     }
 
-    return instruction;
+    return OK;
 }
 
 ReturnStatus register_handler_vm(VM* vm, uint16_t opcode, Handler handler) {
