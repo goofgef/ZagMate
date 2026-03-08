@@ -344,25 +344,25 @@ ReturnStatus dump_vm(VM *vm, char* table[]) {
 	return OK;
 }
 
-//Default vtable of function pointers
-vtable default_vtable = {
-    .write            = write_vm,
-    .run              = run_vm,
-    .clean            = clean_vm,
-    .register_handler = register_handler_vm,
-    .make             = make_vm,
-    .reset            = reset_vm,
-    .append           = append_vm,
-	.append_multiple  = append_multiple_vm,
-    .run_range        = run_range_vm,
-    .find_symbol      = find_symbol_vm,
-    .register_symbol  = register_symbol_vm,
-    .serialize        = serialize_vm,
-    .deserialize      = deserialize_vm,
-    .dump             = dump_vm
-};
-
 ReturnStatus init_vm(VM *vm) {
+	//Default vtable of function pointers
+	static vtable default_vtable = {
+    	.write            = write_vm,
+    	.run              = run_vm,
+    	.clean            = clean_vm,
+    	.register_handler = register_handler_vm,
+    	.make             = make_vm,
+    	.reset            = reset_vm,
+    	.append           = append_vm,
+		.append_multiple  = append_multiple_vm,
+    	.run_range        = run_range_vm,
+    	.find_symbol      = find_symbol_vm,
+    	.register_symbol  = register_symbol_vm,
+    	.serialize        = serialize_vm,
+    	.deserialize      = deserialize_vm,
+    	.dump             = dump_vm
+	};
+
 	//Set most fields to null/zero
     vm->program_size = 0;
     vm->bytecode = NULL;

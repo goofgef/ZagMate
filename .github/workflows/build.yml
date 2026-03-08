@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        build_type: [exe, shared, static]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+
+      - name: Configure CMake (${{ matrix.build_type }})
+        shell: msys2 {0}
+        run: |
+          mkdir -p build/${{ matrix.build_type }}
+          cd build/${{ matrix.build_type }}
+          cmake ../../cmake/${{ matrix.build_type }} -G Ninja
+
+      - name: Build (${{ matrix.build_type }})
+        shell: msys2 {0}
+        run: |
+          cd build/${{ matrix.build_type }}
+          ninja
+
+      - name: Upload executable
+        if: matrix.build_type == 'exe'
+        uses: actions/upload-artifact@v4
+        with:
+          name: byteweasel-exe
+          path: build/exe/byteweasel.exe
+
+      - name: Upload shared library
+        if: matrix.build_type == 'shared'
+        uses: actions/upload-artifact@v4
+        with:
+          name: byteweasel-dll
+          path: build/shared/*.dll
+
+      - name: Upload static library
+        if: matrix.build_type == 'static'
+        uses: actions/upload-artifact@v4
+        with:
+          name: byteweasel-lib
+          path: build/static/*.a

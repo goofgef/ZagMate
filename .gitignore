@@ -1,6 +1,5 @@
 .idea/
 build/
-private.md
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
