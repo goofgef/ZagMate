@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 			.register_count = 64,
 			.stack_size = 1024,
 			.handler_count = 256,
-			.symbol_count = 1024,
+			.symbol_size = 1024,
 			.capacity = 1024
 		};
         vm.config = config;

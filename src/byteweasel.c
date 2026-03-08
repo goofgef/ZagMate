@@ -105,7 +105,7 @@ size_t find_symbol_vm(VM* vm, const char* name) {
 
 ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
     NULL_CHECK_VM(vm);
-	if (vm->symbol_count >= vm->config.symbol_count) return OUT_OF_BOUNDS;
+	if (vm->symbol_count >= vm->config.symbol_size) return OUT_OF_BOUNDS;
 
     //Set symbols[count].field to corresponding parameter
     vm->symbols[vm->symbol_count].name = name;
@@ -382,7 +382,7 @@ ReturnStatus init_vm(VM *vm) {
 		return FAILED_MALLOC;
 	}
 
-	vm->symbols = malloc(sizeof(Symbol) * vm->config.symbol_count);
+	vm->symbols = malloc(sizeof(Symbol) * vm->config.symbol_size);
 	if (!vm->symbols) {
 		free(vm->handlers);
 		free(vm->regs);
@@ -421,7 +421,7 @@ Config default_config(){
 		.register_count = 32,
 		.stack_size = 1024,
 		.handler_count = 256,
-		.symbol_count = 256,
+		.symbol_size = 256,
 		.capacity = 1024
 	};
 	return default_config_var;

@@ -51,7 +51,7 @@ typedef struct{
 	size_t register_count;
 	size_t stack_size;
 	size_t handler_count;
-	size_t symbol_count;
+	size_t symbol_size;
 	size_t capacity;
 }Config;
 
