@@ -6,3 +6,4 @@
 -Tons of bug fixes, mostly just better error handling + best practices
 -Added CI (build.yml) file in .github/workflows.
 -Made vtable inline with init_vm, gave it static modifier.
+-Added comments to main.c and updated README.md code example

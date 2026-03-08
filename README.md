@@ -89,39 +89,55 @@ int sub(VM* vm, Instruction* instruction){
 }
 
 int main(){
+    //Initalize vm struct and config (parameters for init_vm basically)
     VM vm = {0};
     Config config = {
         .register_count = 64,
         .stack_size = 1024,
         .handler_count = 256,
-        .symbol_count = 1024,
+        .symbol_size = 1024,
         .capacity = 1024
     };
+    //Set vm.config to the config variable we declared
     vm.config = config;
+
+    //Initalize the vm
     init_vm(&vm);
-    
+
+    //Register 2 custom opcodes/instructions
     vm.vtable->register_handler(&vm, 0, &add);
     vm.vtable->register_handler(&vm, 1, &sub);
-    
+
+    //Allocate a bytecode array
     Instruction* bytecode = malloc(2 * sizeof(Instruction));
-    
+
+    //Operands for 2 instructions, ADD and SUB
     int64_t ops0[] = {0, 1, 2};
     int64_t ops1[] = {1, 1, 2};
-    
-    bytecode[0] = vm.vtable->make(0, 3, ops0);
-    bytecode[1] = vm.vtable->make(1, 3, ops1);
-    
+
+    //make takes opcode, operand_count, operands and a buffer to write to. It just creates an instruction from what you give it.
+    vm.vtable->make(0, 3, ops0, &bytecode[0]);
+    vm.vtable->make(1, 3, ops1, &bytecode[1]);
+
+    //Assign 2 registers some values
     vm.regs[1].data.value = 11;
     vm.regs[2].data.value = 7;
-    
+
+    //Write bytecode to vm
     vm.vtable->write(&vm, bytecode, 2);
+
+    //Prints the bytecode, table[opcode] should always equal the mnemonic of your opcode
     char* table[] = {"ADD", "SUB"};
     vm.vtable->dump(&vm, table);
+
+    //Interpret the bytecode
     vm.vtable->run(&vm);
     
+    //Print stored results
     printf("Result in r0: %" PRId64 "\n", vm.regs[0].data.value); //18
     printf("Result in r1: %" PRId64 "\n", vm.regs[1].data.value); //4
     
+    //Clean up after us and init_vm
     vm.vtable->clean(&vm);
     return 0;
 }
