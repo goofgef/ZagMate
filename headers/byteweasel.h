@@ -36,6 +36,8 @@ typedef enum{
     NULL_OPERANDS,
     NULL_HANDLER,
     HALTED,
+	FULL_STACK,
+	EMPTY_STACK,
 	OUT_OF_BOUNDS,
 	BAD_READ,
     GENERAL_NULL
@@ -108,6 +110,9 @@ typedef struct {
     size_t (*find_symbol)(struct VM*, const char*);
     ReturnStatus (*register_symbol)(struct VM*, char*, size_t);
     ReturnStatus (*dump)(struct VM*, char*[]);
+
+	ReturnStatus (*pop)(struct VM*);
+	ReturnStatus (*push)(struct VM*, int64_t);
 } vtable;
 
 //Core VM struct, contains everything from handlers to bytecode to 

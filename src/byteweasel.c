@@ -86,6 +86,8 @@ ReturnStatus append_multiple_vm(VM *vm, Instruction instructions[], size_t count
 	return OK;
 }
 
+//Execute 1 instruction
+
 ReturnStatus run_vm_cycle(VM *vm) {
     NULL_CHECK_VM(vm);
 	NULL_CHECK_BYTECODE(vm->bytecode);
@@ -112,6 +114,8 @@ ReturnStatus run_vm_cycle(VM *vm) {
     return 0;
 }
 
+//Find a symbol from a name and return a pc
+
 size_t find_symbol_vm(VM* vm, const char* name) {
 	//This is 0(N), slow, but easier to read/understand
     for (size_t i = 0; i < vm->symbol_count; i++) {
@@ -121,6 +125,8 @@ size_t find_symbol_vm(VM* vm, const char* name) {
     }
     return SIZE_MAX;
 }
+
+//Add a symbol to the symbol stack
 
 ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
     NULL_CHECK_VM(vm);
@@ -136,6 +142,8 @@ ReturnStatus register_symbol_vm(VM* vm, char* name, size_t pc) {
     vm->symbol_count++;
     return OK;
 }
+
+//Runs bytecode in a certain range
 
 ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
 	if (vm->config.optimized) {
@@ -178,6 +186,8 @@ ReturnStatus run_range_vm(VM *vm, size_t start, size_t end) {
 	return OK;
 }
 
+//Interpret the bytecode
+
 ReturnStatus run_vm(VM *vm) {
 	if (vm->config.optimized) {
 		if (!vm) return NULL_VM;
@@ -204,6 +214,8 @@ ReturnStatus run_vm(VM *vm) {
 	return OK;
 }
 
+//make an instruction
+
 ReturnStatus make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[], Instruction* buffer){
 	//Initial setup
     buffer->opcode = opcode;
@@ -221,6 +233,7 @@ ReturnStatus make_vm(uint16_t opcode, uint8_t operand_count, int64_t operands[],
 
     return OK;
 }
+//Assign a handler to a opcode
 
 ReturnStatus register_handler_vm(VM* vm, uint16_t opcode, Handler handler) {
     if (!handler){
@@ -230,6 +243,8 @@ ReturnStatus register_handler_vm(VM* vm, uint16_t opcode, Handler handler) {
     vm->handlers[opcode] = handler;
     return 0;
 }
+
+//Free stuff
 
 ReturnStatus clean_vm(VM *vm) {
     NULL_CHECK_VM(vm);
@@ -250,6 +265,8 @@ ReturnStatus clean_vm(VM *vm) {
 
     return OK;
 }
+
+//Reset changed parts of the vm or smth
 
 ReturnStatus reset_vm(VM* vm) {
 	NULL_CHECK_VM(vm);
@@ -279,6 +296,7 @@ ReturnStatus reset_vm(VM* vm) {
 */
 
 //Serialize bytecode
+
 ReturnStatus serialize_vm(VM *vm, const char *path) {
     NULL_CHECK_VM(vm);
     if (!path)     return NULL_PATH;
@@ -314,6 +332,7 @@ ReturnStatus serialize_vm(VM *vm, const char *path) {
 }
 
 //Deserialize bytecode
+
 ReturnStatus deserialize_vm(VM *vm, const char *path) {
     NULL_CHECK_VM(vm);
     if (!path) return NULL_PATH;
@@ -389,6 +408,8 @@ ReturnStatus deserialize_vm(VM *vm, const char *path) {
     return OK;
 }
 
+//print bytecode neatly
+
 ReturnStatus dump_vm(VM *vm, char* table[]) {
     NULL_CHECK_VM(vm);
     printf("Bytecode dump:\n");
@@ -403,6 +424,34 @@ ReturnStatus dump_vm(VM *vm, char* table[]) {
 	return OK;
 }
 
+//Push to vm->stack
+
+ReturnStatus push_stack_vm(VM *vm, int64_t value) {
+	NULL_CHECK_VM(vm);
+	if (!vm->stack) return NULL_STACK;
+	if (vm->sp >= vm->config.stack_size) return FULL_STACK;
+
+	//idx++ returns idxs before value and then updates it, and ++idx is the opposite.
+	//This always trips me up
+	vm->stack[vm->sp++] = value;
+	return OK;
+}
+
+//Pop item from stack
+
+ReturnStatus pop_stack_vm(VM *vm){
+	NULL_CHECK_VM(vm);
+	if (!vm->stack) return NULL_STACK;
+	if (vm->sp == 0) return EMPTY_STACK;
+
+    vm->sp--;
+    if (!vm->config.optimized) {
+        vm->stack[vm->sp] = 0;
+    }
+    return OK;
+}
+
+//Initalize the VM struct
 ReturnStatus init_vm(VM *vm) {
 	//Default vtable of function pointers
 	static vtable default_vtable = {
@@ -419,7 +468,9 @@ ReturnStatus init_vm(VM *vm) {
     	.register_symbol  = register_symbol_vm,
     	.serialize        = serialize_vm,
     	.deserialize      = deserialize_vm,
-    	.dump             = dump_vm
+    	.dump             = dump_vm,
+		.pop              = pop_stack_vm,
+		.push             = push_stack_vm
 	};
 
 	//Set most fields to null/zero
