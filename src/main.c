@@ -68,6 +68,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    if (argc > 1 && (strcmp(argv[1], "--what") != 0 && strcmp(argv[1], "-w") != 0)) {
+        fprintf(stderr, "Usage: byteweasel -w/--what\n");
+        return 1;
+    }
     if (argc > 1 && (strcmp(argv[1], "--what") == 0 || strcmp(argv[1], "-w") == 0)) {
         printf("ByteWeasel is a register-based VM made in C.\n");
         printf("ByteWeasel is meant to be a framework that others can build on.\n");
